@@ -218,7 +218,9 @@ class ImageMessage extends Message {
                 padding: theme.messagePadding,
                 child: TextContainer(
                   text: caption!,
-                  style: theme.inwardMessageTextStyle,
+                  style: author == loggedInUser
+                      ? theme.outwardMessageTextStyle
+                      : theme.inwardMessageTextStyle,
                   linkStyle: theme.urlTextStyle,
                 ),
               )

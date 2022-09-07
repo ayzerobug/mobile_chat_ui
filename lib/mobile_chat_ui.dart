@@ -2,9 +2,9 @@ library mobile_chat_ui;
 
 import 'package:flutter/material.dart';
 
-import 'modals/chat_theme.dart';
-import 'modals/messages/message.dart';
-import 'modals/user.dart';
+import 'models/chat_theme.dart';
+import 'models/messages/message.dart';
+import 'models/user.dart';
 
 class Chat extends StatefulWidget {
   const Chat(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_chat_ui/modals/chat_theme.dart';
 
+import '../../models/chat_theme.dart';
 import '../user.dart';
 
 abstract class Message {

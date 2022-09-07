@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_chat_ui/modals/chat_theme.dart';
 
-import '../modals/user.dart';
+import '../models/chat_theme.dart';
+import '../models/user.dart';
 
 class UserAvatar extends StatelessWidget {
   const UserAvatar({Key? key, required this.user, required this.theme})
