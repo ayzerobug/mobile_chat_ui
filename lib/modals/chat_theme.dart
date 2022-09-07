@@ -9,13 +9,10 @@ import '../custom_widgets/status_builder.dart';
 abstract class ChatTheme {
   ChatTheme({
     this.backgroundColor,
-    required this.imageBorderRadius,
     this.backgroundImage,
-    this.userStatusColor,
-    required this.verificationBadge,
-    this.attachmentBtnIcon,
+    required this.imageBorderRadius,
+    required this.userStatusColor,
     required this.primaryColor,
-    this.emojisIcon,
     required this.seenIcon,
     required this.sentIcon,
     required this.sendingFailedIcon,
@@ -26,7 +23,6 @@ abstract class ChatTheme {
     required this.actionMessageTextStyle,
     required this.linkPreviewTitleStyle,
     required this.linkPreviewTextStyle,
-    this.sendingIcon,
     required this.timestampTextStyle,
     required this.inwardMessageTextStyle,
     required this.outwardMessageTextStyle,
@@ -34,8 +30,8 @@ abstract class ChatTheme {
     required this.avatarTextStyle,
     required this.messagePadding,
     required this.actionMessageMargin,
-    this.inwardMessageBorderRadius,
-    this.outwardMessageBorderRadius,
+    required this.inwardMessageBorderRadius,
+    required this.outwardMessageBorderRadius,
     required this.inwardMessageBackgroundColor,
     required this.outwardMessageBackgroundColor,
     required this.messageWidth,
@@ -43,29 +39,15 @@ abstract class ChatTheme {
     required this.messageMargin,
     required this.defaultUserColor,
     required this.userAvatarRadius,
+    required this.verificationBadge,
   });
 
-  //Set the background color for your chat
   final Color? backgroundColor;
-
-  //Set the background image for your chat
   final DecorationImage? backgroundImage;
-
-  //Color for your indicator if user is online
   final Color? userStatusColor;
-
-  //Verification badge shows in front of the username
   final Widget verificationBadge;
   final BorderRadius? imageBorderRadius;
-
-  //This widget shows as the placeholder for your users to click for attaching files
-  final Widget? attachmentBtnIcon;
-
   final Color primaryColor;
-
-  final Widget? emojisIcon;
-
-  final Widget? sendingIcon;
 
   final Widget sendingFailedIcon;
 
@@ -145,8 +127,6 @@ class DefaultChatTheme extends ChatTheme {
       ),
       super.bodyPadding =
           const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      super.attachmentBtnIcon,
-      super.emojisIcon,
       super.usernamePadding = const EdgeInsets.all(2),
       super.seenIcon = const MessageStatus(2),
       super.sentIcon = const MessageStatus(1),
@@ -154,7 +134,6 @@ class DefaultChatTheme extends ChatTheme {
         Mdi.alert_circle_outline,
         color: Colors.red,
       ),
-      super.sendingIcon,
       super.inwardMessageTextStyle = const TextStyle(
         color: Color.fromARGB(255, 225, 225, 225),
         fontSize: 14,

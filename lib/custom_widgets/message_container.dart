@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mobile_chat_ui/custom_widgets/status_builder.dart';
 import 'package:mobile_chat_ui/modals/chat_theme.dart';
-import 'package:mobile_chat_ui/modals/messages/message.dart';
 
 import '../modals/user.dart';
 import 'user_avatar.dart';
@@ -97,14 +96,14 @@ Widget loggedInUserBoilerPlate({
                       style: theme.timeTextStyle,
                       textAlign: TextAlign.end,
                     ),
-                    const SizedBox(
-                      width: 20,
-                    ),
                     showName
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              const SizedBox(
+                                width: 20,
+                              ),
                               Text(
                                 "You",
                                 style: theme.usernameTextStyle
@@ -119,6 +118,11 @@ Widget loggedInUserBoilerPlate({
                             ],
                           )
                         : Container(),
+                    !showName && showAvatar
+                        ? Container()
+                        : const SizedBox(
+                            width: 20,
+                          ),
                     showAvatar
                         ? UserAvatar(user: user, theme: theme)
                         : Container(),

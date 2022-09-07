@@ -36,28 +36,26 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: widget.theme.bodyPadding,
-        decoration: BoxDecoration(
-          color: widget.theme.backgroundColor,
-          image: widget.theme.backgroundImage,
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: widget.messages
-                      .map((e) => e.builder(context, widget.showUserAvatar,
-                          widget.showUsername, widget.user, widget.theme))
-                      .toList(),
-                ),
+    return Container(
+      padding: widget.theme.bodyPadding,
+      decoration: BoxDecoration(
+        color: widget.theme.backgroundColor,
+        image: widget.theme.backgroundImage,
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: widget.messages
+                    .map((e) => e.builder(context, widget.showUserAvatar,
+                        widget.showUsername, widget.user, widget.theme))
+                    .toList(),
               ),
             ),
-            widget.input ?? Container()
-          ],
-        ),
+          ),
+          widget.input ?? Container()
+        ],
       ),
     );
   }
