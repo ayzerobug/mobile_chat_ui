@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://ayzerobug.com">
-    <img alt="Chat Image" src="#" />
+    <img alt="Chat Image" src="https://raw.githubusercontent.com/ayzerobug/mobile_chat_ui/master/design.png" />
   </a>
 </p>
 
@@ -57,6 +57,7 @@ The messages variable is a list of type Message which subTypes of:
 
 ```dart
 import 'package:mobile_chat_ui/models/messages/message.dart';
+import 'package:mobile_chat_ui/models/messages/types.dart';
 
 List<Message> messages = [
     TimeStampMessage(displayTime: "Today"),
@@ -88,7 +89,7 @@ List<Message> messages = [
 The author parameter of a message should receive a type User
 
 
-##user
+## User
 Declare a User object with the example below
 ```dart
 import 'package:mobile_chat_ui/models/user.dart';
@@ -99,28 +100,3 @@ User loggedInUser = User(
     avatarUrl: "https://randomuser.me/api/portraits/women/92.jpg",
 );
 ```
-
-
-
-
-List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
