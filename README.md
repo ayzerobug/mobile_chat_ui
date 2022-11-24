@@ -3,7 +3,7 @@
 <h1 align="center">Mobile Chat UI</h1>
 
 <p align="center">
-  A fully customizable chat UI for mobile developers
+  A fully customizable modern chat UI for Android, IOS and web developers.
 </p>
 
 <br>
