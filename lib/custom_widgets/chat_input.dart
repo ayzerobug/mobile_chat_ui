@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/fluent.dart';
+import 'package:iconify_flutter/icons/eva.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 
@@ -15,7 +15,7 @@ class ChatInput extends StatelessWidget {
       child: Row(
         children: [
           const Iconify(
-            Fluent.attach_16_filled,
+            Eva.attach_outline,
             size: 30,
             color: Colors.white,
           ),

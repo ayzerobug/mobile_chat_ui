@@ -244,7 +244,7 @@ class TextMessage extends Message {
   TextMessage(
       {required super.author,
       required super.time,
-      super.stage,
+      super.stage = 0,
       required this.text});
 
   @override

@@ -9,7 +9,7 @@ class User {
   final Color? color;
 
   User(
-      {this.name,
+      {required this.name,
       required this.id,
       this.avatarUrl,
       this.isOnline = false,

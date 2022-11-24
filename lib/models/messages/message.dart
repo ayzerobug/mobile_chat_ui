@@ -8,7 +8,7 @@ abstract class Message {
   String? time;
   int? stage;
 
-  Message({this.author, this.time, this.stage});
+  Message({this.author, this.time = "now", this.stage});
 
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
       User loggedInUser, ChatTheme theme);
