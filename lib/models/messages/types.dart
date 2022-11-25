@@ -17,7 +17,8 @@ class ActionMessage extends Message {
       {required super.author, required super.time, required this.text});
 
   @override
-  Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
+  Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
+      bool showUsername,
       User loggedInUser, ChatTheme theme) {
     return Padding(
       padding: theme.actionMessageMargin,
@@ -38,7 +39,8 @@ class AudioMessage extends Message {
   });
 
   @override
-  Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
+  Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
+      bool showUsername,
       User loggedInUser, ChatTheme theme) {
     Widget returnValue = Padding(
       padding: const EdgeInsets.all(15),
@@ -91,6 +93,7 @@ class AudioMessage extends Message {
       message: this,
       theme: theme,
       showUserAvatar: showUserAvatar,
+      showMessageStatus: showMessageStatus,
       showUsername: showUsername,
       user: loggedInUser,
       child: returnValue,
@@ -111,7 +114,8 @@ class DocumentMessage extends Message {
       required this.documentName});
 
   @override
-  Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
+  Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
+      bool showUsername,
       User loggedInUser, ChatTheme theme) {
     Widget returnValue = Padding(
       padding: const EdgeInsets.all(10),
@@ -173,6 +177,7 @@ class DocumentMessage extends Message {
       message: this,
       theme: theme,
       showUserAvatar: showUserAvatar,
+      showMessageStatus: showMessageStatus,
       showUsername: showUsername,
       user: loggedInUser,
       child: returnValue,
@@ -191,7 +196,8 @@ class ImageMessage extends Message {
       this.caption});
 
   @override
-  Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
+  Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
+      bool showUsername,
       User loggedInUser, ChatTheme theme) {
     Widget returnValue = Column(
       children: [
@@ -232,6 +238,7 @@ class ImageMessage extends Message {
       message: this,
       theme: theme,
       showUserAvatar: showUserAvatar,
+      showMessageStatus: showMessageStatus,
       showUsername: showUsername,
       user: loggedInUser,
       child: returnValue,
@@ -248,13 +255,15 @@ class TextMessage extends Message {
       required this.text});
 
   @override
-  Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
+  Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
+      bool showUsername,
       User loggedInUser, ChatTheme theme) {
     return MessageContainer(
       parentContext: ctx,
       message: this,
       theme: theme,
       showUserAvatar: showUserAvatar,
+      showMessageStatus: showMessageStatus,
       showUsername: showUsername,
       user: loggedInUser,
       child: Padding(
@@ -276,7 +285,8 @@ class TimeStampMessage extends Message {
   TimeStampMessage({required this.displayTime});
 
   @override
-  Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
+  Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
+      bool showUsername,
       User loggedInUser, ChatTheme theme) {
     return Text(
       displayTime,

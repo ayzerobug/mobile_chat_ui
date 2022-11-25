@@ -1,27 +1,32 @@
 library mobile_chat_ui;
 
 import 'package:flutter/material.dart';
+import 'package:mobile_chat_ui/custom_widgets/chat_input.dart';
 
 import 'models/chat_theme.dart';
 import 'models/messages/message.dart';
 import 'models/user.dart';
 
 class Chat extends StatefulWidget {
-  const Chat(
+  Chat(
       {Key? key,
       required this.user,
       required this.theme,
       required this.messages,
       this.showUserAvatar = false,
       this.showUsername = true,
-      required this.input})
+      this.showMessageStatus = false,
+      this.hasInput = true,
+      this.input})
       : super(key: key);
 
   final ChatTheme theme;
-  final List<Message> messages;
+  List<Message> messages;
   final bool showUserAvatar;
   final bool showUsername;
+  final bool showMessageStatus;
   final User user;
+  final bool hasInput;
   final Widget? input;
 
   @override
@@ -48,13 +53,26 @@ class _ChatState extends State<Chat> {
             child: SingleChildScrollView(
               child: Column(
                 children: widget.messages
-                    .map((e) => e.builder(context, widget.showUserAvatar,
+                    .map((e) => e.builder(
+                        context,
+                        widget.showUserAvatar,
+                        widget.showMessageStatus,
                         widget.showUsername, widget.user, widget.theme))
                     .toList(),
               ),
             ),
           ),
-          widget.input ?? Container()
+          widget.hasInput
+              ? widget.input ??
+                  ChatInput(
+                    user: widget.user,
+                    onSend: (message) {
+                      setState(() {
+                        widget.messages.add(message);
+                      });
+                    },
+                  )
+              : SizedBox(),
         ],
       ),
     );

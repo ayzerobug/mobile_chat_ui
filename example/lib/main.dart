@@ -204,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
           userAvatarRadius: 12,
         ),
         showUserAvatar: true,
-        input: const ChatInput(),
+        hasInput: true,
       ),
     );
   }

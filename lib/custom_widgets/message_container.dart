@@ -14,6 +14,7 @@ class MessageContainer extends StatelessWidget {
     required this.message,
     required this.theme,
     required this.showUserAvatar,
+    required this.showMessageStatus,
     required this.showUsername,
     required this.child,
     required this.user,
@@ -24,6 +25,7 @@ class MessageContainer extends StatelessWidget {
   final ChatTheme theme;
   final bool showUsername;
   final bool showUserAvatar;
+  final bool showMessageStatus;
   final User user;
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class MessageContainer extends StatelessWidget {
             child: child,
             theme: theme,
             showName: showUsername,
+            showMessageStatus: showMessageStatus,
             showAvatar: showUserAvatar,
             user: message.author!,
           )
@@ -58,6 +61,7 @@ Widget loggedInUserBoilerPlate({
   required int stage,
   required Widget child,
   required bool showAvatar,
+  required bool showMessageStatus,
   required bool showName,
   required User user,
 }) {
@@ -87,10 +91,14 @@ Widget loggedInUserBoilerPlate({
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    buildMessageStatus(stage, theme),
-                    const SizedBox(
-                      width: 20,
-                    ),
+                    showMessageStatus ? Row(
+                      children: [
+                        buildMessageStatus(stage, theme),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                      ],
+                    ) : SizedBox(),
                     Text(
                       time,
                       style: theme.timeTextStyle,

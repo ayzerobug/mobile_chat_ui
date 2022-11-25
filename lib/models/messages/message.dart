@@ -10,6 +10,7 @@ abstract class Message {
 
   Message({this.author, this.time = "now", this.stage});
 
-  Widget builder(BuildContext ctx, bool showUserAvatar, bool showUsername,
+  Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
+      bool showUsername,
       User loggedInUser, ChatTheme theme);
 }
