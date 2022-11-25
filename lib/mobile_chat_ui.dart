@@ -7,6 +7,7 @@ import 'models/chat_theme.dart';
 import 'models/messages/message.dart';
 import 'models/user.dart';
 
+// ignore: must_be_immutable
 class Chat extends StatefulWidget {
   Chat(
       {Key? key,
@@ -41,15 +42,15 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: widget.theme.bodyPadding,
-      decoration: BoxDecoration(
-        color: widget.theme.backgroundColor,
-        image: widget.theme.backgroundImage,
-      ),
-      child: Column(
-        children: [
-          Expanded(
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            padding: widget.theme.bodyPadding,
+            decoration: BoxDecoration(
+              color: widget.theme.backgroundColor,
+              image: widget.theme.backgroundImage,
+            ),
             child: SingleChildScrollView(
               child: Column(
                 children: widget.messages
@@ -57,24 +58,26 @@ class _ChatState extends State<Chat> {
                         context,
                         widget.showUserAvatar,
                         widget.showMessageStatus,
-                        widget.showUsername, widget.user, widget.theme))
+                        widget.showUsername,
+                        widget.user,
+                        widget.theme))
                     .toList(),
               ),
             ),
           ),
-          widget.hasInput
-              ? widget.input ??
-                  ChatInput(
-                    user: widget.user,
-                    onSend: (message) {
-                      setState(() {
-                        widget.messages.add(message);
-                      });
-                    },
-                  )
-              : SizedBox(),
-        ],
-      ),
+        ),
+        widget.hasInput
+            ? widget.input ??
+                ChatInput(
+                  user: widget.user,
+                  onSend: (message) {
+                    setState(() {
+                      widget.messages.add(message);
+                    });
+                  },
+                )
+            : SizedBox(),
+      ],
     );
   }
 }

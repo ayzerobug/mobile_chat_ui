@@ -10,10 +10,12 @@ import '../models/messages/types.dart';
 import '../models/user.dart';
 
 class ChatInput extends StatefulWidget {
-  const ChatInput({Key? key, this.onSend, this.user}) : super(key: key);
+  const ChatInput({Key? key, this.onSend, this.user, this.padding})
+      : super(key: key);
 
   final void Function(Message message)? onSend;
   final User? user;
+  final EdgeInsetsGeometry? padding;
 
   @override
   State<ChatInput> createState() => _ChatInputState();
@@ -42,7 +44,7 @@ class _ChatInputState extends State<ChatInput> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(5, 20, 5, 10),
+      padding: widget.padding ?? const EdgeInsets.fromLTRB(5, 20, 5, 10),
       child: Row(
         children: [
           const Iconify(
