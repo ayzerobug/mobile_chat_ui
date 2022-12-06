@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_chat_ui/custom_widgets/status_builder.dart';
 
 import '../models/chat_theme.dart';
+import '../models/messages/message.dart';
 import '../models/user.dart';
 import 'user_avatar.dart';
 
@@ -20,7 +21,7 @@ class MessageContainer extends StatelessWidget {
     required this.user,
   }) : super(key: key);
   final BuildContext parentContext;
-  final dynamic message;
+  final Message message;
   final Widget child;
   final ChatTheme theme;
   final bool showUsername;
