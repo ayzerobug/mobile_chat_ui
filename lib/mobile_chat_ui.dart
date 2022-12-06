@@ -18,7 +18,8 @@ class Chat extends StatefulWidget {
       this.showUsername = true,
       this.showMessageStatus = false,
       this.hasInput = true,
-      this.input})
+      this.input,
+      this.emptyWidget = const Text("No message in this chat yet")})
       : super(key: key);
 
   final ChatTheme theme;
@@ -29,6 +30,7 @@ class Chat extends StatefulWidget {
   final User user;
   final bool hasInput;
   final Widget? input;
+  final Widget emptyWidget;
 
   @override
   State<Chat> createState() => _ChatState();
@@ -51,7 +53,8 @@ class _ChatState extends State<Chat> {
               color: widget.theme.backgroundColor,
               image: widget.theme.backgroundImage,
             ),
-            child: SingleChildScrollView(
+            child: widget.messages.isNotEmpty
+                ? SingleChildScrollView(
               child: Column(
                 children: widget.messages
                     .map((e) => e.builder(
@@ -63,7 +66,8 @@ class _ChatState extends State<Chat> {
                         widget.theme))
                     .toList(),
               ),
-            ),
+                  )
+                : widget.emptyWidget,
           ),
         ),
         widget.hasInput

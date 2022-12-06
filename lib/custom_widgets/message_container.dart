@@ -91,14 +91,16 @@ Widget loggedInUserBoilerPlate({
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    showMessageStatus ? Row(
-                      children: [
-                        buildMessageStatus(stage, theme),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                      ],
-                    ) : SizedBox(),
+                    showMessageStatus
+                        ? Row(
+                            children: [
+                              buildMessageStatus(stage, theme),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
                     Text(
                       time,
                       style: theme.timeTextStyle,
