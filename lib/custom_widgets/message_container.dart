@@ -29,7 +29,7 @@ class MessageContainer extends StatelessWidget {
   final User user;
   @override
   Widget build(BuildContext context) {
-    return message.author == user
+    return message.author.id == user.id
         ? loggedInUserBoilerPlate(
             ctx: parentContext,
             time: message.time!,
