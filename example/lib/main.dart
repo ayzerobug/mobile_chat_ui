@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       }
       messages = [
-        TimeStampMessage(displayTime: "Today"),
+        TimeStampMessage(author: loggedInUser, displayTime: "Today"),
         TextMessage(
             author: users[Random().nextInt(users.length)],
             time: "12:00 PM",

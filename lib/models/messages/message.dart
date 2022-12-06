@@ -4,11 +4,11 @@ import '../../models/chat_theme.dart';
 import '../user.dart';
 
 abstract class Message {
-  User? author;
+  User author;
   String? time;
   int? stage;
 
-  Message({this.author, this.time = "now", this.stage});
+  Message({required this.author, this.time = "now", this.stage});
 
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
       bool showUsername,

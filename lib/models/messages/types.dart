@@ -224,7 +224,7 @@ class ImageMessage extends Message {
                 padding: theme.messagePadding,
                 child: TextContainer(
                   text: caption!,
-                  style: author!.id == loggedInUser.id
+                  style: author.id == loggedInUser.id
                       ? theme.outwardMessageTextStyle
                       : theme.inwardMessageTextStyle,
                   linkStyle: theme.urlTextStyle,
@@ -270,7 +270,7 @@ class TextMessage extends Message {
         padding: theme.messagePadding,
         child: TextContainer(
           text: text,
-          style: author!.id == loggedInUser.id
+          style: author.id == loggedInUser.id
               ? theme.outwardMessageTextStyle
               : theme.inwardMessageTextStyle,
           linkStyle: theme.urlTextStyle,
@@ -282,7 +282,7 @@ class TextMessage extends Message {
 
 class TimeStampMessage extends Message {
   final String displayTime;
-  TimeStampMessage({required this.displayTime});
+  TimeStampMessage({required super.author, required this.displayTime});
 
   @override
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,

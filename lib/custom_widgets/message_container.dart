@@ -39,12 +39,12 @@ class MessageContainer extends StatelessWidget {
             showName: showUsername,
             showMessageStatus: showMessageStatus,
             showAvatar: showUserAvatar,
-            user: message.author!,
+            user: message.author,
           )
         : chatClientBoilerPlate(
             ctx: parentContext,
             time: message.time!,
-            user: message.author!,
+            user: message.author,
             verificationBadge: theme.verificationBadge,
             child: child,
             showName: showUsername,
