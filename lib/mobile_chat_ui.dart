@@ -3,6 +3,7 @@ library mobile_chat_ui;
 import 'package:flutter/material.dart';
 import 'package:mobile_chat_ui/custom_widgets/chat_input.dart';
 
+import 'emptyWidget.dart';
 import 'models/chat_theme.dart';
 import 'models/messages/message.dart';
 import 'models/user.dart';
@@ -19,7 +20,7 @@ class Chat extends StatefulWidget {
       this.showMessageStatus = false,
       this.hasInput = true,
       this.input,
-      this.emptyWidget = const Text("No message in this chat yet")})
+      this.emptyWidget = const EmptyWidget()})
       : super(key: key);
 
   final ChatTheme theme;
