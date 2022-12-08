@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audio_wave/audio_wave.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,7 @@ class ActionMessage extends Message {
 
   @override
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
-      bool showUsername,
-      User loggedInUser, ChatTheme theme) {
+      bool showUsername, User loggedInUser, ChatTheme theme) {
     return Padding(
       padding: theme.actionMessageMargin,
       child: Text(
@@ -40,8 +41,7 @@ class AudioMessage extends Message {
 
   @override
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
-      bool showUsername,
-      User loggedInUser, ChatTheme theme) {
+      bool showUsername, User loggedInUser, ChatTheme theme) {
     Widget returnValue = Padding(
       padding: const EdgeInsets.all(15),
       child: Row(
@@ -115,8 +115,7 @@ class DocumentMessage extends Message {
 
   @override
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
-      bool showUsername,
-      User loggedInUser, ChatTheme theme) {
+      bool showUsername, User loggedInUser, ChatTheme theme) {
     Widget returnValue = Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -187,18 +186,17 @@ class DocumentMessage extends Message {
 
 class ImageMessage extends Message {
   String? caption;
-  final String imageUrl;
+  final String uri;
   ImageMessage(
       {required super.author,
       required super.time,
       super.stage,
-      required this.imageUrl,
+      required this.uri,
       this.caption});
 
   @override
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
-      bool showUsername,
-      User loggedInUser, ChatTheme theme) {
+      bool showUsername, User loggedInUser, ChatTheme theme) {
     Widget returnValue = Column(
       children: [
         IntrinsicHeight(
@@ -212,10 +210,15 @@ class ImageMessage extends Message {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.contain,
-              ),
+              child: uri.toString().contains("http")
+                  ? CachedNetworkImage(
+                      imageUrl: uri,
+                      fit: BoxFit.contain,
+                    )
+                  : Image.file(
+                      File(uri),
+                      fit: BoxFit.contain,
+                    ),
             ),
           ),
         ),
@@ -256,8 +259,7 @@ class TextMessage extends Message {
 
   @override
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
-      bool showUsername,
-      User loggedInUser, ChatTheme theme) {
+      bool showUsername, User loggedInUser, ChatTheme theme) {
     return MessageContainer(
       parentContext: ctx,
       message: this,
@@ -286,8 +288,7 @@ class TimeStampMessage extends Message {
 
   @override
   Widget builder(BuildContext ctx, bool showUserAvatar, bool showMessageStatus,
-      bool showUsername,
-      User loggedInUser, ChatTheme theme) {
+      bool showUsername, User loggedInUser, ChatTheme theme) {
     return Text(
       displayTime,
       style: theme.timestampTextStyle,
