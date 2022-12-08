@@ -56,17 +56,19 @@ class _ChatState extends State<Chat> {
             ),
             child: widget.messages.isNotEmpty
                 ? SingleChildScrollView(
-              child: Column(
-                children: widget.messages
-                    .map((e) => e.builder(
-                        context,
-                        widget.showUserAvatar,
-                        widget.showMessageStatus,
-                        widget.showUsername,
-                        widget.user,
-                        widget.theme))
-                    .toList(),
-              ),
+                    scrollDirection: Axis.vertical,
+                    reverse: true,
+                    child: Column(
+                      children: widget.messages
+                          .map((e) => e.builder(
+                              context,
+                              widget.showUserAvatar,
+                              widget.showMessageStatus,
+                              widget.showUsername,
+                              widget.user,
+                              widget.theme))
+                          .toList(),
+                    ),
                   )
                 : widget.emptyWidget,
           ),
