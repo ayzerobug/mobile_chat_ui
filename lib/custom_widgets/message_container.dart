@@ -21,7 +21,7 @@ class MessageContainer extends StatelessWidget {
     required this.user,
   }) : super(key: key);
   final BuildContext parentContext;
-  final Message message;
+  final dynamic message;
   final Widget child;
   final ChatTheme theme;
   final bool showUsername;
