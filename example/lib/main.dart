@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:mobile_chat_ui/custom_widgets/chat_input.dart';
 import 'package:mobile_chat_ui/mobile_chat_ui.dart';
 import 'package:mobile_chat_ui/models/chat_theme.dart';
 import 'package:mobile_chat_ui/models/messages/message.dart';
