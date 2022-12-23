@@ -1,11 +1,13 @@
 library mobile_chat_ui;
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile_chat_ui/custom_widgets/chat_input.dart';
 
 import 'emptyWidget.dart';
 import 'models/chat_theme.dart';
 import 'models/messages/message.dart';
+import 'models/messages/types.dart';
 import 'models/user.dart';
 
 // ignore: must_be_immutable
@@ -20,7 +22,8 @@ class Chat extends StatefulWidget {
       this.showMessageStatus = false,
       this.hasInput = true,
       this.input,
-      this.emptyWidget = const EmptyWidget()})
+      this.emptyWidget = const EmptyWidget(),
+      this.onSend})
       : super(key: key);
 
   final ChatTheme theme;
@@ -32,6 +35,8 @@ class Chat extends StatefulWidget {
   final bool hasInput;
   final Widget? input;
   final Widget emptyWidget;
+  void Function(Message message)? onSend;
+  void Function()? onAttachBtnClicked;
 
   @override
   State<Chat> createState() => _ChatState();
@@ -42,6 +47,31 @@ class _ChatState extends State<Chat> {
   void initState() {
     super.initState();
   }
+
+  void addMessage(Message message) {
+    setState(() {
+      widget.messages.add(message);
+    });
+  }
+
+  void attachBtn() async {
+    XFile? result = await ImagePicker().pickImage(
+      imageQuality: 70,
+      maxWidth: 1440,
+      source: ImageSource.gallery,
+    );
+    if (result != null) {
+      final message = ImageMessage(
+        author: widget.user,
+        time: "now",
+        stage: 0,
+        uri: result.path,
+      );
+      addMessage(message);
+    }
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -55,35 +85,36 @@ class _ChatState extends State<Chat> {
               image: widget.theme.backgroundImage,
             ),
             child: widget.messages.isNotEmpty
-                ? SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    reverse: true,
-                    child: Column(
-                      children: widget.messages
-                          .map((e) => e.builder(
-                              context,
-                              widget.showUserAvatar,
-                              widget.showMessageStatus,
-                              widget.showUsername,
-                              widget.user,
-                              widget.theme))
-                          .toList(),
-                    ),
+                ? Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          reverse: true,
+                          child: Column(
+                            children: widget.messages
+                                .map((e) => e.builder(
+                                    context,
+                                    widget.showUserAvatar,
+                                    widget.showMessageStatus,
+                                    widget.showUsername,
+                                    widget.user,
+                                    widget.theme))
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                      ChatInput(
+                        user: widget.user,
+                        onSend: widget.onSend ?? addMessage,
+                        attachBtnClicked:
+                            widget.onAttachBtnClicked ?? attachBtn,
+                      )
+                    ],
                   )
                 : widget.emptyWidget,
           ),
         ),
-        widget.hasInput
-            ? widget.input ??
-                ChatInput(
-                  user: widget.user,
-                  onSend: (message) {
-                    setState(() {
-                      widget.messages.add(message);
-                    });
-                  },
-                )
-            : SizedBox(),
       ],
     );
   }

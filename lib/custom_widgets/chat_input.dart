@@ -10,11 +10,17 @@ import '../models/messages/types.dart';
 import '../models/user.dart';
 
 class ChatInput extends StatefulWidget {
-  const ChatInput({Key? key, this.onSend, this.user, this.padding})
+  const ChatInput(
+      {Key? key,
+      this.onSend,
+      required this.user,
+      this.padding,
+      this.attachBtnClicked})
       : super(key: key);
 
   final void Function(Message message)? onSend;
-  final User? user;
+  final void Function()? attachBtnClicked;
+  final User user;
   final EdgeInsetsGeometry? padding;
 
   @override
@@ -29,11 +35,7 @@ class _ChatInputState extends State<ChatInput> {
 
   onSendClick() {
     Message message = TextMessage(
-        author:
-            widget.user ?? User(id: "0de4krd0sas-49iecxo203rji", name: 'Demo'),
-        text: textController.text,
-        time: "now",
-        stage: 1);
+        author: widget.user, text: textController.text, time: "now", stage: 1);
     widget.onSend!(message);
     setState(() {
       textController.clear();
@@ -47,10 +49,13 @@ class _ChatInputState extends State<ChatInput> {
       padding: widget.padding ?? const EdgeInsets.fromLTRB(5, 20, 5, 10),
       child: Row(
         children: [
-          const Iconify(
-            Eva.attach_outline,
-            size: 30,
-            color: Colors.white,
+          InkWell(
+            onTap: widget.attachBtnClicked,
+            child: const Iconify(
+              Eva.attach_outline,
+              size: 30,
+              color: Colors.white,
+            ),
           ),
           SizedBox(
             width: iconsSpacing,
