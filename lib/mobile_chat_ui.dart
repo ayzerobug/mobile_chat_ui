@@ -23,7 +23,8 @@ class Chat extends StatefulWidget {
       this.hasInput = true,
       this.input,
       this.emptyWidget = const EmptyWidget(),
-      this.onSend})
+      this.onSend,
+      this.onFileSelected})
       : super(key: key);
 
   final ChatTheme theme;
@@ -36,7 +37,7 @@ class Chat extends StatefulWidget {
   final Widget? input;
   final Widget emptyWidget;
   void Function(Message message)? onSend;
-  void Function()? onAttachBtnClicked;
+  void Function(Message message, XFile image)? onFileSelected;
 
   @override
   State<Chat> createState() => _ChatState();
@@ -49,6 +50,12 @@ class _ChatState extends State<Chat> {
   }
 
   void addMessage(Message message) {
+    setState(() {
+      widget.messages.add(message);
+    });
+  }
+
+  void addImageMessage(ImageMessage message, XFile image) {
     setState(() {
       widget.messages.add(message);
     });
@@ -71,15 +78,12 @@ class _ChatState extends State<Chat> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: Container(
-            padding: widget.theme.bodyPadding,
             decoration: BoxDecoration(
               color: widget.theme.backgroundColor,
               image: widget.theme.backgroundImage,
@@ -88,28 +92,35 @@ class _ChatState extends State<Chat> {
                 ? Column(
                     children: [
                       Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          reverse: true,
-                          child: Column(
-                            children: widget.messages
-                                .map((e) => e.builder(
-                                    context,
-                                    widget.showUserAvatar,
-                                    widget.showMessageStatus,
-                                    widget.showUsername,
-                                    widget.user,
-                                    widget.theme))
-                                .toList(),
+                        child: Padding(
+                          padding: widget.theme.bodyPadding,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            reverse: true,
+                            child: Column(
+                              children: widget.messages
+                                  .map((e) => e.builder(
+                                      context,
+                                      widget.showUserAvatar,
+                                      widget.showMessageStatus,
+                                      widget.showUsername,
+                                      widget.user,
+                                      widget.theme))
+                                  .toList(),
+                            ),
                           ),
                         ),
                       ),
-                      ChatInput(
-                        user: widget.user,
-                        onSend: widget.onSend ?? addMessage,
-                        attachBtnClicked:
-                            widget.onAttachBtnClicked ?? attachBtn,
-                      )
+                      if (widget.hasInput)
+                        widget.input ??
+                            ChatInput(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 5),
+                              user: widget.user,
+                              onSend: widget.onSend ?? addMessage,
+                              onFileSelected:
+                                  widget.onFileSelected ?? addImageMessage,
+                            )
                     ],
                   )
                 : widget.emptyWidget,
