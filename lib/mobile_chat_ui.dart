@@ -24,7 +24,7 @@ class Chat extends StatefulWidget {
       this.input,
       this.emptyWidget = const EmptyWidget(),
       this.onSend,
-      this.onFileSelected})
+      this.onImageSelected})
       : super(key: key);
 
   final ChatTheme theme;
@@ -36,8 +36,8 @@ class Chat extends StatefulWidget {
   final bool hasInput;
   final Widget? input;
   final Widget emptyWidget;
-  void Function(Message message)? onSend;
-  void Function(Message message, XFile image)? onFileSelected;
+  final void Function(TextMessage message)? onSend;
+  final void Function(ImageMessage message, XFile image)? onImageSelected;
 
   @override
   State<Chat> createState() => _ChatState();
@@ -88,11 +88,11 @@ class _ChatState extends State<Chat> {
               color: widget.theme.backgroundColor,
               image: widget.theme.backgroundImage,
             ),
-            child: widget.messages.isNotEmpty
-                ? Column(
-                    children: [
-                      Expanded(
-                        child: Padding(
+            child: Column(
+              children: [
+                Expanded(
+                  child: widget.messages.isNotEmpty
+                      ? Padding(
                           padding: widget.theme.bodyPadding,
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
@@ -109,21 +109,21 @@ class _ChatState extends State<Chat> {
                                   .toList(),
                             ),
                           ),
-                        ),
-                      ),
-                      if (widget.hasInput)
-                        widget.input ??
-                            ChatInput(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 5),
-                              user: widget.user,
-                              onSend: widget.onSend ?? addMessage,
-                              onFileSelected:
-                                  widget.onFileSelected ?? addImageMessage,
-                            )
-                    ],
-                  )
-                : widget.emptyWidget,
+                        )
+                      : widget.emptyWidget,
+                ),
+                if (widget.hasInput)
+                  widget.input ??
+                      ChatInput(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                        user: widget.user,
+                        onSend: widget.onSend ?? addMessage,
+                        onFileSelected:
+                            widget.onImageSelected ?? addImageMessage,
+                      )
+              ],
+            ),
           ),
         ),
       ],

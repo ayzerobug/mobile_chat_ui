@@ -6,7 +6,6 @@ import 'package:iconify_flutter/icons/ic.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
-import '../models/messages/message.dart';
 import '../models/messages/types.dart';
 import '../models/user.dart';
 
@@ -21,7 +20,7 @@ class ChatInput extends StatefulWidget {
       this.cursorColor})
       : super(key: key);
 
-  final void Function(Message message)? onSend;
+  final void Function(TextMessage message)? onSend;
   final void Function(ImageMessage message, XFile image)? onFileSelected;
   final void Function()? attachBtnClicked;
   final User user;
@@ -273,97 +272,5 @@ class _ChatInputState extends State<ChatInput> {
         ),
       ),
     );
-    // return Padding(
-    //   padding: widget.padding,
-    //   child: Row(
-    //     children: [
-    //       InkWell(
-    //         onTap: widget.attachBtnClicked,
-    //         child: const Iconify(
-    //           Eva.attach_outline,
-    //           size: 30,
-    //           color: Colors.white,
-    //         ),
-    //       ),
-    //       SizedBox(
-    //         width: iconsSpacing,
-    //       ),
-    //       Expanded(
-    //         child: Container(
-    //           decoration: const BoxDecoration(
-    //             color: Color(0xff373E4E),
-    //             borderRadius: BorderRadius.only(
-    //               topLeft: Radius.circular(15),
-    //               topRight: Radius.circular(15),
-    //               bottomRight: Radius.circular(15),
-    //               bottomLeft: Radius.circular(15),
-    //             ),
-    //           ),
-    //           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-    //           child: Row(
-    //             crossAxisAlignment: CrossAxisAlignment.end,
-    //             children: [
-    //               Expanded(
-    //                 child: TextField(
-    //                   controller: textController,
-    //                   onChanged: (value) {
-    //                     setState(() {
-    //                       if (value != "" && value.isNotEmpty) {
-    //                         hasData = true;
-    //                       } else {
-    //                         hasData = false;
-    //                       }
-    //                     });
-    //                   },
-    //                   cursorColor: const Color(0xff705cff),
-    //                   minLines: 1,
-    //                   maxLines: 20,
-    //                   decoration: const InputDecoration(
-    //                     hintStyle: TextStyle(
-    //                       fontSize: 16,
-    //                       color: Color.fromARGB(255, 190, 190, 190),
-    //                     ),
-    //                     hintText: "Type message here ...",
-    //                     enabledBorder: InputBorder.none,
-    //                     focusedBorder: InputBorder.none,
-    //                   ),
-    //                   style: const TextStyle(
-    //                     fontSize: 16,
-    //                     color: Colors.white,
-    //                   ),
-    //                 ),
-    //               ),
-    //               const Padding(
-    //                 padding: EdgeInsets.only(bottom: 12.0),
-    //                 child: Iconify(
-    //                   Ic.outline_emoji_emotions,
-    //                   size: 22,
-    //                   color: Colors.white,
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //       SizedBox(
-    //         width: iconsSpacing,
-    //       ),
-    //       hasData
-    //           ? InkWell(
-    //               onTap: onSendClick,
-    //               child: const Iconify(
-    //                 Carbon.send_alt,
-    //                 size: 30,
-    //                 color: Colors.white,
-    //               ),
-    //             )
-    //           : const Iconify(
-    //               Ph.microphone,
-    //               size: 30,
-    //               color: Colors.white,
-    //             ),
-    //     ],
-    //   ),
-    // );
   }
 }
