@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_chat_ui/custom_widgets/status_builder.dart';
 
 import '../models/chat_theme.dart';
-import '../models/messages/message.dart';
 import '../models/user.dart';
 import 'user_avatar.dart';
 

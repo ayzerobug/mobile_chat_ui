@@ -10,7 +10,7 @@ import '../models/messages/types.dart';
 import '../models/user.dart';
 
 class ChatInput extends StatefulWidget {
-  ChatInput(
+  const ChatInput(
       {Key? key,
       this.onSend,
       required this.user,
@@ -25,7 +25,7 @@ class ChatInput extends StatefulWidget {
   final void Function()? attachBtnClicked;
   final User user;
   final EdgeInsetsGeometry padding;
-  Color? cursorColor;
+  final Color? cursorColor;
 
   @override
   State<ChatInput> createState() => _ChatInputState();
@@ -251,7 +251,7 @@ class _ChatInputState extends State<ChatInput> {
                         skinToneDialogBgColor: Colors.white,
                         skinToneIndicatorColor: Colors.grey,
                         enableSkinTones: true,
-                        showRecentsTab: true,
+                        recentTabBehavior: RecentTabBehavior.RECENT,
                         recentsLimit: 28,
                         replaceEmojiOnLimitExceed: false,
                         noRecents: Text(
