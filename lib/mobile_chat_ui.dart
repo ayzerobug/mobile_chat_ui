@@ -10,7 +10,6 @@ import 'models/messages/message.dart';
 import 'models/messages/types.dart';
 import 'models/user.dart';
 
-// ignore: must_be_immutable
 class Chat extends StatefulWidget {
   Chat(
       {Key? key,
@@ -28,7 +27,7 @@ class Chat extends StatefulWidget {
       : super(key: key);
 
   final ChatTheme theme;
-  List<Message> messages;
+  final List<Message> messages;
   final bool showUserAvatar;
   final bool showUsername;
   final bool showMessageStatus;

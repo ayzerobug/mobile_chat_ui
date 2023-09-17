@@ -25,7 +25,7 @@ class ChatInput extends StatefulWidget {
   final void Function()? attachBtnClicked;
   final User user;
   final EdgeInsetsGeometry padding;
-  Color? cursorColor;
+  final Color? cursorColor;
 
   @override
   State<ChatInput> createState() => _ChatInputState();
@@ -251,9 +251,9 @@ class _ChatInputState extends State<ChatInput> {
                         skinToneDialogBgColor: Colors.white,
                         skinToneIndicatorColor: Colors.grey,
                         enableSkinTones: true,
-                        showRecentsTab: true,
                         recentsLimit: 28,
                         replaceEmojiOnLimitExceed: false,
+                        recentTabBehavior: RecentTabBehavior.RECENT,
                         noRecents: Text(
                           'No Recents',
                           style: TextStyle(fontSize: 20, color: Colors.black26),
