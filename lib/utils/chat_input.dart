@@ -6,8 +6,8 @@ import 'package:iconify_flutter/icons/ic.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
-import '../models/messages/types.dart';
-import '../models/user.dart';
+import 'message.dart';
+import '../src/models/user.dart';
 
 class ChatInput extends StatefulWidget {
   ChatInput(
@@ -20,11 +20,22 @@ class ChatInput extends StatefulWidget {
       this.cursorColor})
       : super(key: key);
 
+  /// Callback function to fire when the send icon is clicked
   final void Function(TextMessage message)? onSend;
+
+  /// Callback function to fire when an image file is selected
   final void Function(ImageMessage message, XFile image)? onFileSelected;
+
+  /// Callback function to fire when the attachment button is clicked
   final void Function()? attachBtnClicked;
+
+  /// The user associated with this chat interface
   final User user;
+
+  /// The padding to be applied to the chat interface
   final EdgeInsetsGeometry padding;
+
+  /// The color of the cursor when typing in the input field
   final Color? cursorColor;
 
   @override

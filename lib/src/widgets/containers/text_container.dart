@@ -16,10 +16,8 @@ class TextContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Linkify(
       onOpen: (link) async {
-        if (await canLaunchUrl(Uri.parse(link.url))) {
-          await launchUrl(Uri.parse(link.url));
-        } else {
-          throw 'Could not launch $link';
+        if (!await launchUrl(Uri.parse(link.url))) {
+          throw Exception('Could not launch ${link.url}');
         }
       },
       text: text,

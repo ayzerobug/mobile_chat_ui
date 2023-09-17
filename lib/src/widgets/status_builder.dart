@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/chat_theme.dart';
+import '../../utils/chat_theme.dart';
 
 class MessageStatus extends StatelessWidget {
   const MessageStatus(

@@ -4,7 +4,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 
-import '../custom_widgets/status_builder.dart';
+import '../src/widgets/status_builder.dart';
 
 abstract class ChatTheme {
   ChatTheme({
