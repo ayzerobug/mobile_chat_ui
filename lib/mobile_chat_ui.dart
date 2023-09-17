@@ -81,33 +81,12 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  void addImageMessage(ImageMessage message, XFile image) {
-    addMessage(message);
-  }
-
   void scrollToBottom() {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       duration: Duration(seconds: 1),
       curve: Curves.fastOutSlowIn,
     );
-  }
-
-  void attachBtn() async {
-    XFile? result = await ImagePicker().pickImage(
-      imageQuality: 70,
-      maxWidth: 1440,
-      source: ImageSource.gallery,
-    );
-    if (result != null) {
-      final message = ImageMessage(
-        author: widget.user,
-        time: "now",
-        stage: 0,
-        uri: result.path,
-      );
-      addMessage(message);
-    }
   }
 
   @override

@@ -42,59 +42,106 @@ abstract class ChatTheme {
     required this.verificationBadge,
   });
 
+  /// The background color for the chat widget.
   final Color? backgroundColor;
+
+  /// The background image for the chat widget.
   final DecorationImage? backgroundImage;
+
+  /// The color for the user's status indicator.
   final Color? userStatusColor;
+
+  /// A widget to display a verification badge for the user.
   final Widget verificationBadge;
+
+  /// The border radius for user images.
   final BorderRadius? imageBorderRadius;
+
+  /// The primary color used for various elements in the chat.
   final Color primaryColor;
 
+  /// A widget representing an icon for a sending message that failed.
   final Widget sendingFailedIcon;
 
+  /// A widget representing an icon for a sent message.
   final Widget sentIcon;
 
+  /// A widget representing an icon for a seen message.
   final Widget seenIcon;
 
+  /// The text style for inward (received) messages.
   final TextStyle inwardMessageTextStyle;
+
+  /// The text style for outward (sent) messages.
   final TextStyle outwardMessageTextStyle;
+
+  /// The text style for timestamps in messages.
   final TextStyle timeTextStyle;
+
+  /// The text style for URLs in messages.
   final TextStyle urlTextStyle;
+
+  /// The text style for the title in link previews.
   final TextStyle linkPreviewTitleStyle;
+
+  /// The text style for the text content in link previews.
   final TextStyle linkPreviewTextStyle;
+
+  /// The text style for message timestamps.
   final TextStyle timestampTextStyle;
+
+  /// The color for the audio wave visualization.
   final Color audioWaveColor;
+
+  /// The default color for user avatars.
   final Color defaultUserColor;
+
+  /// The radius of user avatars.
   final double userAvatarRadius;
 
+  /// The text style for user avatars.
   final TextStyle avatarTextStyle;
 
+  /// The border radius for outward (sent) messages.
   final BorderRadiusGeometry? outwardMessageBorderRadius;
 
+  /// The border radius for inward (received) messages.
   final BorderRadiusGeometry? inwardMessageBorderRadius;
 
+  /// The text style for usernames.
   final TextStyle usernameTextStyle;
+
+  /// The text style for action messages (e.g., notifications).
   final TextStyle actionMessageTextStyle;
 
+  /// The padding around messages.
   final EdgeInsetsGeometry messagePadding;
 
+  /// The padding around usernames.
   final EdgeInsetsGeometry usernamePadding;
 
+  /// The padding around the chat body.
   final EdgeInsetsGeometry bodyPadding;
 
+  /// The margin around messages.
   final EdgeInsetsGeometry messageMargin;
+
+  /// The margin around action messages (e.g., notifications).
   final EdgeInsetsGeometry actionMessageMargin;
 
+  /// The background color for inward (received) messages.
   final Color inwardMessageBackgroundColor;
 
+  /// The background color for outward (sent) messages.
   final Color outwardMessageBackgroundColor;
 
+  /// The width of messages.
   final double messageWidth;
 }
 
 class DefaultChatTheme extends ChatTheme {
   DefaultChatTheme(
       {super.imageBorderRadius,
-      // super.backgroundColor = const Color(0xff1B202D),
       super.backgroundColor,
       super.backgroundImage = const DecorationImage(
         image: CachedNetworkImageProvider(
