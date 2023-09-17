@@ -1,3 +1,3 @@
-## 0.0.4
+## 1.0.0
 
-* Some minor fixed and improvements.
+* A total refractor of the package.

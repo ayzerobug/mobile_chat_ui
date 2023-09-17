@@ -1,10 +1,10 @@
 name: mobile_chat_ui
 description: A fully customizable modern chat UI for Android, IOS and web developers.
-version: 0.0.7
+version: 1.0.0
 homepage: https://github.com/ayzerobug/mobile_chat_ui
 
 environment:
-  sdk: ">=2.17.6 <3.0.0"
+  sdk: ">=2.17.6 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
