@@ -36,10 +36,9 @@ class _ChatScreenState extends State<ChatScreen> {
         user: loggedInUser,
         messages: messages,
         theme: DefaultChatTheme(userAvatarRadius: 12),
-        authorDetailsLocation: AuthorDetailsLocation.top,
-        showUserAvatar: true,
+        authorDetailsLocation: AuthorDetailsLocation.bottom,
         hasInput: true,
-        inputWidget: Container(),
+        showUserAvatar: true,
       ),
     );
   }

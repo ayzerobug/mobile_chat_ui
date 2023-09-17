@@ -19,7 +19,7 @@
 ## Getting Started
 
 ### Requirements
-`Dart >=2.17.0` and `Flutter >=2.0.0`
+`Dart >=3.1.1` and `Flutter >=3.13.3`
 
 First run the following command in your terminal:
 
@@ -32,71 +32,22 @@ flutter pub add mobile_chat_ui
 import 'package:mobile_chat_ui/mobile_chat_ui.dart';
 
 return Scaffold(
-    appBar: AppBar(
-    title: const Center(child: Text("Mobile Chat UI"))),
+    appBar: AppBar(title: const Text("Chat Test")),
     body: Chat(
         user: loggedInUser,
         messages: messages,
-        theme: DefaultChatTheme(
-          userAvatarRadius: 12,
-        ),
+        theme: DefaultChatTheme(userAvatarRadius: 12),
+        authorDetailsLocation: AuthorDetailsLocation.bottom,
+        hasInput: true,
         showUserAvatar: true,
-        input: const ChatInput(),
     ),
 );
 ```
 
-## Messages
-The messages variable is a list of type Message which subTypes of:
-* TextMessage
-* AudioMessage
-* ImageMessage
-* ActionMessage
-* DocumentMessage
-* TimestampMessage
+# Contributing 
 
-```dart
-import 'package:mobile_chat_ui/models/messages/message.dart';
-import 'package:mobile_chat_ui/models/messages/types.dart';
+All contributions are welcome!
 
-List<Message> messages = [
-    TimeStampMessage(displayTime: "Today"),
-    TextMessage(
-        author: users[Random().nextInt(users.length)],
-        time: "12:00 PM",
-        text:
-            "Hello house, we shall be having a brief meeting in this group tonight by 8:00pm UTC."),
-    ActionMessage(
-        author: users[Random().nextInt(users.length)],
-        time: "now",
-        text: "Victor Aniedi joined the group chat via group invite link"),
-    ImageMessage(
-        author: users[Random().nextInt(users.length)],
-        time: "12:00 PM",
-        uri:
-            "https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-        caption:
-            "Mollit tempor ea quis laborum ipsum velit ea elit sunt nisi. Ipsum amet commodo sint magna velit in sint eu ipsum reprehenderit in incididunt sint fugiat. Consectetur sit laborum commodo cupidatat. Velit aliquip minim officia consequat. Nisi eu Lorem proident incididunt."),
-    DocumentMessage(
-        author: users[Random().nextInt(users.length)],
-        time: "12:28 PM",
-        documentFormat: "DOCX",
-        documentSize: "32 kb",
-        documentName: "Brief Project Real Estate Landing Page",
-    ),
-];
-```
-The author parameter of a message should receive a type User
+If you like this project then please click on the 🌟 it'll be appreciated or if you wanna add more epic stuff you can submit your pull request and it'll be gladly accepted 🙆‍♂️
 
-
-## User
-Declare a User object with the example below
-```dart
-import 'package:mobile_chat_ui/models/user.dart';
-
-User loggedInUser = User(
-    id: "GtIqnUfq0KY5GfR6mD25jlVyNlDdl",
-    name: "Putra Silas",
-    avatarUrl: "https://randomuser.me/api/portraits/women/92.jpg",
-);
-```
+or if you found any bug or issue do not hesitate opening an issue on github
