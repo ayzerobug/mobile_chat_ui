@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/containers/message_container.dart';
 import '../../../widgets/containers/text_container.dart';
 import '../../../../utils/author_details_location.dart';
-import '../../../../utils/chat_theme.dart';
+import '../../../../utils/themes/chat_theme.dart';
 import '../../user.dart';
 import 'message.dart';
 
@@ -13,6 +13,8 @@ class TextMessage extends Message {
       {required super.author,
       required super.time,
       super.stage = 0,
+      required super.id,
+      super.theme,
       required this.text});
 
   @override
@@ -22,25 +24,28 @@ class TextMessage extends Message {
       bool showMessageStatus,
       bool showUsername,
       User loggedInUser,
-      ChatTheme theme,
+      ChatTheme chatTheme,
       AuthorDetailsLocation authorDetailsLocation) {
+    final messageTheme = author.id == loggedInUser.id
+        ? chatTheme.outwardMessageTheme
+        : chatTheme.inwardMessageTheme;
+
     return MessageContainer(
       parentContext: ctx,
       message: this,
-      theme: theme,
+      chatTheme: chatTheme,
       showUserAvatar: showUserAvatar,
       showMessageStatus: showMessageStatus,
       showUsername: showUsername,
       user: loggedInUser,
       detailsLocation: authorDetailsLocation,
       child: Padding(
-        padding: theme.messagePadding,
+        padding: theme?.padding ?? messageTheme?.padding ?? EdgeInsets.zero,
         child: TextContainer(
+          textStyle: theme?.contentTextStyle ?? messageTheme?.contentTextStyle,
           text: text,
-          style: author.id == loggedInUser.id
-              ? theme.outwardMessageTextStyle
-              : theme.inwardMessageTextStyle,
-          linkStyle: theme.urlTextStyle,
+          linkTextStyle: theme?.urlTextStyle ?? messageTheme?.urlTextStyle,
+          boldTextStyle: theme?.boldTextStyle ?? messageTheme?.boldTextStyle,
         ),
       ),
     );

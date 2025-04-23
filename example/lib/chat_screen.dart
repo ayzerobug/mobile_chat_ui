@@ -2,10 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_chat_ui/mobile_chat_ui.dart';
-import 'package:mobile_chat_ui/utils/author_details_location.dart';
-import 'package:mobile_chat_ui/utils/chat_theme.dart';
-import 'package:mobile_chat_ui/utils/message.dart';
-import 'package:mobile_chat_ui/utils/user.dart';
 
 import 'util.dart';
 
@@ -35,7 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Chat(
         user: loggedInUser,
         messages: messages,
-        theme: DefaultChatTheme(userAvatarRadius: 12),
+        chatTheme:
+            DefaultChatTheme(userAvatarRadius: 12, primaryColor: Colors.blue),
         authorDetailsLocation: AuthorDetailsLocation.bottom,
         hasInput: true,
         showUserAvatar: true,

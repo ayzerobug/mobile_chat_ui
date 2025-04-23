@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_chat_ui/utils/themes/message_theme.dart';
 
-import '../../../utils/chat_theme.dart';
+import '../../../utils/themes/chat_theme.dart';
 import '../../models/user.dart';
 import '../../../utils/author_details_location.dart';
 import '../status_builder.dart';
@@ -8,7 +9,8 @@ import '../user_avatar.dart';
 
 Widget outwardMessageContainer({
   required BuildContext ctx,
-  required ChatTheme theme,
+  required ChatTheme chatTheme,
+  required MessageTheme? messageTheme,
   required String time,
   required int stage,
   required Widget child,
@@ -19,17 +21,22 @@ Widget outwardMessageContainer({
   required AuthorDetailsLocation detailsLocation,
 }) {
   return Padding(
-    padding: theme.messageMargin,
+    padding: messageTheme?.margin ??
+        chatTheme.outwardMessageTheme?.margin ??
+        EdgeInsets.zero,
     child: Row(
       children: [
         const Spacer(),
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(ctx).size.width * (theme.messageWidth),
+            maxWidth: MediaQuery.of(ctx).size.width *
+                (messageTheme?.messageWidth ??
+                    chatTheme.outwardMessageTheme?.messageWidth ??
+                    0.7),
           ),
           child: _ChatMessage(
             ctx: ctx,
-            theme: theme,
+            chatTheme: chatTheme,
             child: child,
             time: time,
             user: user,
@@ -38,6 +45,14 @@ Widget outwardMessageContainer({
             showAvatar: showAvatar,
             detailsLocation: detailsLocation,
             showMessageStatus: showMessageStatus,
+            decoration: BoxDecoration(
+              border:
+                  messageTheme?.border ?? chatTheme.outwardMessageTheme?.border,
+              color: messageTheme?.backgroundColor ??
+                  chatTheme.outwardMessageTheme?.backgroundColor,
+              borderRadius: messageTheme?.borderRadius ??
+                  chatTheme.outwardMessageTheme?.borderRadius,
+            ),
           ),
         ),
       ],
@@ -46,19 +61,21 @@ Widget outwardMessageContainer({
 }
 
 class _ChatMessage extends StatelessWidget {
-  const _ChatMessage(
-      {required this.ctx,
-      required this.theme,
-      required this.child,
-      required this.time,
-      required this.user,
-      required this.showName,
-      required this.showAvatar,
-      required this.detailsLocation,
-      required this.showMessageStatus,
-      required this.stage});
+  const _ChatMessage({
+    required this.ctx,
+    required this.chatTheme,
+    required this.child,
+    required this.time,
+    required this.user,
+    required this.showName,
+    required this.showAvatar,
+    required this.detailsLocation,
+    required this.showMessageStatus,
+    required this.stage,
+    this.decoration,
+  });
   final BuildContext ctx;
-  final ChatTheme theme;
+  final ChatTheme chatTheme;
   final Widget child;
   final String time;
   final User user;
@@ -67,6 +84,7 @@ class _ChatMessage extends StatelessWidget {
   final bool showMessageStatus;
   final int stage;
   final AuthorDetailsLocation detailsLocation;
+  final BoxDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +95,7 @@ class _ChatMessage extends StatelessWidget {
           if (detailsLocation == AuthorDetailsLocation.top)
             Column(children: [_authorDetails(), const SizedBox(height: 5)]),
           Container(
-            decoration: BoxDecoration(
-              color: theme.outwardMessageBackgroundColor,
-              borderRadius: theme.outwardMessageBorderRadius,
-            ),
+            decoration: decoration,
             child: IntrinsicWidth(child: child),
           ),
           if (detailsLocation == AuthorDetailsLocation.bottom)
@@ -97,7 +112,7 @@ class _ChatMessage extends StatelessWidget {
         showMessageStatus
             ? Row(
                 children: [
-                  buildMessageStatus(stage, theme),
+                  buildMessageStatus(stage, chatTheme),
                   const SizedBox(
                     width: 20,
                   ),
@@ -106,34 +121,35 @@ class _ChatMessage extends StatelessWidget {
             : SizedBox(),
         Text(
           time,
-          style: theme.timeTextStyle,
+          style: chatTheme.timeTextStyle,
           textAlign: TextAlign.end,
         ),
+        Spacer(),
+        SizedBox(width: MediaQuery.of(ctx).size.height * 0.01),
         showName
             ? Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    width: 20,
-                  ),
                   Text(
                     "You",
-                    style: theme.usernameTextStyle.copyWith(color: user.color),
+                    style:
+                        chatTheme.usernameTextStyle.copyWith(color: user.color),
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  user.isVerified ? theme.verificationBadge : Container(),
+                  if (user.isVerified)
+                    const SizedBox(
+                      width: 5,
+                    ),
+                  user.isVerified ? chatTheme.verificationBadge : Container(),
                 ],
               )
             : Container(),
         !showName && showAvatar
             ? Container()
             : const SizedBox(
-                width: 20,
+                width: 10,
               ),
-        showAvatar ? UserAvatar(user: user, theme: theme) : Container(),
+        showAvatar ? UserAvatar(user: user, chatTheme: chatTheme) : Container(),
       ],
     );
   }
