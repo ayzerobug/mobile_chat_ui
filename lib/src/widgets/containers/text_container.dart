@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import '../rich_selectable_text.dart';
 
 class TextContainer extends StatelessWidget {
-  const TextContainer(
-      {Key? key,
-      required this.text,
-      required this.style,
-      required this.linkStyle})
-      : super(key: key);
+  const TextContainer({
+    Key? key,
+    required this.text,
+    required this.textStyle,
+    required this.boldTextStyle,
+    required this.linkTextStyle,
+  }) : super(key: key);
   final String text;
-  final TextStyle style;
-  final TextStyle linkStyle;
+  final TextStyle? textStyle;
+  final TextStyle? boldTextStyle;
+  final TextStyle? linkTextStyle;
   @override
   Widget build(BuildContext context) {
-    return Linkify(
-      onOpen: (link) async {
-        if (!await launchUrl(Uri.parse(link.url))) {
-          throw Exception('Could not launch ${link.url}');
-        }
-      },
+    return RichSelectableText(
       text: text,
-      style: style,
-      linkStyle: linkStyle,
+      baseStyle: textStyle,
+      boldStyle: boldTextStyle,
+      linkStyle: linkTextStyle,
     );
+    // return SelectableLinkify(
+    //   onOpen: (link) async {
+    //     if (!await launchUrl(Uri.parse(link.url))) {
+    //       throw Exception('Could not launch ${link.url}');
+    //     }
+    //   },
+    //   text: text,
+    //   style: style,
+    //   linkStyle: linkStyle,
+    // );
   }
 }

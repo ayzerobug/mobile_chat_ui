@@ -1,285 +1,353 @@
+import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/eva.dart';
 import 'package:iconify_flutter/icons/ic.dart';
+import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
+import '../src/widgets/stacked_images.dart';
+import 'themes/chat_theme.dart';
 import 'message.dart';
 import '../src/models/user.dart';
 
 class ChatInput extends StatefulWidget {
-  ChatInput(
-      {Key? key,
-      this.onSend,
-      required this.user,
-      required this.padding,
-      this.attachBtnClicked,
-      this.onFileSelected,
-      this.cursorColor})
-      : super(key: key);
+  const ChatInput({
+    Key? key,
+    this.onSend,
+    required this.user,
+    required this.padding,
+    this.attachBtnClicked,
+    this.canUseAudio = true,
+    this.cursorColor,
+    this.mediaSelector,
+    this.imageSource = ImageSource.gallery,
+    required this.theme,
+  }) : super(key: key);
 
-  /// Callback function to fire when the send icon is clicked
-  final void Function(TextMessage message)? onSend;
-
-  /// Callback function to fire when an image file is selected
-  final void Function(ImageMessage message, XFile image)? onFileSelected;
-
-  /// Callback function to fire when the attachment button is clicked
+  final void Function(Message message)? onSend;
   final void Function()? attachBtnClicked;
-
-  /// The user associated with this chat interface
   final User user;
-
-  /// The padding to be applied to the chat interface
   final EdgeInsetsGeometry padding;
-
-  /// The color of the cursor when typing in the input field
   final Color? cursorColor;
+  final ChatTheme theme;
+  final bool canUseAudio;
+  final Widget? mediaSelector;
+  final ImageSource imageSource;
 
   @override
   State<ChatInput> createState() => _ChatInputState();
 }
 
 class _ChatInputState extends State<ChatInput> {
-  final TextEditingController textController = TextEditingController();
-  final double iconsSpacing = 10.0;
-  bool hasData = false;
+  final textController = TextEditingController();
+  final recorderController = RecorderController();
+  final playerController = PlayerController();
+  final focusNode = FocusNode();
+  String? recordedFilePath;
+  bool isPlaying = false;
+  List<XFile> images = [];
   bool showEmoji = false;
-  late FocusNode myFocusNode;
+  bool isRecording = false;
 
-  void onSendClick() {
-    if (hasData) {
-      TextMessage message = TextMessage(
-          author: widget.user,
-          text: textController.text,
-          time: "now",
-          stage: 1);
-      widget.onSend!(message);
-      setState(() {
-        textController.clear();
-        hasData = false;
-      });
-    }
-  }
+  bool get hasData =>
+      textController.text.trim().isNotEmpty || images.isNotEmpty;
 
-  void handleImageSelection() async {
-    XFile? result = await ImagePicker().pickImage(
-      imageQuality: 70,
-      maxWidth: 1440,
-      source: ImageSource.gallery,
-    );
-    if (result != null) {
-      final message = ImageMessage(
-        author: widget.user,
-        time: "now",
-        stage: 0,
-        uri: result.path,
-      );
-      if (widget.onFileSelected != null) {
-        widget.onFileSelected!(message, result);
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    myFocusNode = FocusNode();
-  }
+  final imagePicker = ImagePicker();
 
   @override
   void dispose() {
+    recorderController.dispose();
+    playerController.dispose();
+    textController.dispose();
+    focusNode.dispose();
     super.dispose();
-    myFocusNode.dispose();
   }
 
-  void hideEmoji() {
-    if (showEmoji) {
-      setState(() {
-        showEmoji = false;
-      });
+  void _handleSend() {
+    Message? message;
+
+    if (recordedFilePath != null) {
+      message = AudioMessage(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        author: widget.user,
+        audioPath: recordedFilePath!,
+        time: "now",
+        stage: 1,
+      );
+    } else if (images.isNotEmpty) {
+      message = ImageMessage(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        author: widget.user,
+        caption: textController.text,
+        uris: images.map((e) => e.path).toList(),
+        time: "now",
+        stage: 1,
+      );
+    } else if (hasData) {
+      message = TextMessage(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        author: widget.user,
+        text: textController.text,
+        time: "now",
+        stage: 1,
+      );
     }
+
+    if (message == null) return;
+
+    widget.onSend?.call(message);
+
+    focusNode.unfocus();
+    setState(() {
+      textController.clear();
+      images.clear();
+      recordedFilePath = null;
+      isPlaying = false;
+    });
+  }
+
+  Future<void> _handleImagePick() async {
+    final result = await imagePicker.pickImage(
+        source: widget.imageSource, imageQuality: 50);
+    if (result != null) {
+      setState(() => images.add(result));
+    }
+  }
+
+  void _startRecording() async {
+    if (recorderController.hasPermission ||
+        await recorderController.checkPermission()) {
+      await recorderController.record(
+        androidEncoder: AndroidEncoder.aac,
+        androidOutputFormat: AndroidOutputFormat.mpeg4,
+        iosEncoder: IosEncoder.kAudioFormatMPEG4AAC,
+      );
+      setState(() => isRecording = true);
+    }
+  }
+
+  void _stopRecording() async {
+    recordedFilePath = await recorderController.stop();
+    if (recordedFilePath != null) {
+      playerController.preparePlayer(path: recordedFilePath!);
+    }
+    setState(() => isRecording = false);
+  }
+
+  void _toggleEmoji() async {
+    if (showEmoji) {
+      focusNode.requestFocus();
+    } else {
+      focusNode.unfocus();
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+
+    setState(() => showEmoji = !showEmoji);
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (showEmoji) {
-          hideEmoji();
-          return false;
-        }
-        return true;
-      },
-      child: IntrinsicHeight(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(5, 20, 5, 10),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: handleImageSelection,
-                    child: const Iconify(
-                      Eva.attach_outline,
-                      size: 30,
-                      color: Colors.white,
-                    ),
+    final theme = widget.theme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (images.isNotEmpty)
+          StackedImages(
+            imageUris: images.map((e) => e.path).toList(),
+            imageSize: 50,
+            overlap: 2,
+          ),
+        if (recordedFilePath != null && !isRecording)
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                onPressed: () async {
+                  if (isPlaying) {
+                    await playerController.pausePlayer();
+                    setState(() => isPlaying = false);
+                  } else {
+                    await playerController.startPlayer();
+                    setState(() => isPlaying = false);
+                  }
+                  setState(() => isPlaying = !isPlaying);
+                },
+              ),
+              Expanded(
+                child: AudioFileWaveforms(
+                  size: Size(
+                    MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.height * 0.05,
                   ),
-                  const SizedBox(
-                    width: 10.0,
+                  playerController: playerController,
+                  enableSeekGesture: true,
+                  waveformType: WaveformType.fitWidth,
+                  playerWaveStyle: PlayerWaveStyle(
+                    fixedWaveColor: theme.primaryColor.withValues(alpha: 0.4),
+                    liveWaveColor: theme.primaryColor,
                   ),
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xff373E4E),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                          topRight: Radius.circular(50),
-                          bottomRight: Radius.circular(50),
-                          bottomLeft: Radius.circular(50),
-                        ),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: textController,
-                              focusNode: myFocusNode,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value != "" && value.isNotEmpty) {
-                                    hasData = true;
-                                  } else {
-                                    hasData = false;
-                                  }
-                                });
-                              },
-                              onTap: () {
-                                setState(() {
-                                  showEmoji = false;
-                                });
-                              },
-                              cursorColor: widget.cursorColor,
-                              minLines: 1,
-                              maxLines: 20,
-                              decoration: const InputDecoration(
-                                hintStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: Color.fromARGB(255, 190, 190, 190),
-                                ),
-                                hintText: "Type message here ...",
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                              ),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    recordedFilePath = null;
+                    isPlaying = false;
+                  });
+                },
+              )
+            ],
+          ),
+        if (isRecording)
+          AudioWaveforms(
+            enableGesture: false,
+            size: Size(
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height * 0.05,
+            ),
+            recorderController: recorderController,
+            waveStyle: WaveStyle(
+              waveColor: theme.primaryColor,
+              extendWaveform: true,
+              showMiddleLine: false,
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
+          child: Row(
+            children: [
+              widget.mediaSelector != null
+                  ? InkWell(
+                      child: widget.mediaSelector,
+                      onTap: _handleImagePick,
+                    )
+                  : _buildIconBtn(Eva.attach_outline, _handleImagePick),
+              const SizedBox(width: 5),
+              _buildTextField(theme),
+              const SizedBox(width: 5),
+              (hasData || recordedFilePath != null)
+                  ? _buildIconBtn(Carbon.send_alt, _handleSend)
+                  : widget.canUseAudio
+                      ? GestureDetector(
+                          onLongPressStart: (_) => _startRecording(),
+                          onLongPressEnd: (_) => _stopRecording(),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeInOut,
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: isRecording
+                                  ? [
+                                      BoxShadow(
+                                        color:
+                                            Colors.red.withValues(alpha: 0.6),
+                                        blurRadius: 12,
+                                        spreadRadius: 2,
+                                      )
+                                    ]
+                                  : [],
+                            ),
+                            child: Iconify(
+                              MaterialSymbols.mic_outline_rounded,
+                              size: 30,
+                              color: widget.theme.iconColor ??
+                                  widget.theme.primaryColor,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: showEmoji
-                                ? InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        showEmoji = false;
-                                      });
-                                      myFocusNode.requestFocus();
-                                    },
-                                    child: const Iconify(
-                                      Carbon.string_text,
-                                      size: 22,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : InkWell(
-                                    onTap: () async {
-                                      myFocusNode.unfocus();
-                                      await Future.delayed(
-                                          const Duration(milliseconds: 500),
-                                          () {
-                                        setState(() {
-                                          showEmoji = true;
-                                        });
-                                      });
-                                    },
-                                    child: const Iconify(
-                                      Ic.outline_emoji_emotions,
-                                      size: 22,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
-                  hasData
-                      ? InkWell(
-                          onTap: onSendClick,
-                          child: const Iconify(
-                            Carbon.send_alt,
-                            size: 30,
-                            color: Colors.white,
-                          ),
                         )
-                      : const SizedBox(),
-                ],
+                      : SizedBox.shrink(),
+            ],
+          ),
+        ),
+        if (showEmoji) _buildEmojiPicker(),
+      ],
+    );
+  }
+
+  Widget _buildIconBtn(String icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Iconify(
+        icon,
+        size: 30,
+        color: widget.theme.iconColor,
+      ),
+    );
+  }
+
+  Widget _buildTextField(ChatTheme theme) {
+    final heightFactor = MediaQuery.of(context).size.height * 0.015;
+
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.inputBackgroundColor ?? const Color(0xff373E4E),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: textController,
+                focusNode: focusNode,
+                onChanged: (_) => setState(() {}),
+                onTap: () => setState(() => showEmoji = false),
+                cursorColor: widget.cursorColor,
+                minLines: 1,
+                maxLines: 20,
+                decoration: InputDecoration(
+                  hintText: "Type message here ...",
+                  hintStyle: TextStyle(fontSize: heightFactor),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: heightFactor),
               ),
             ),
-            showEmoji
-                ? SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    child: EmojiPicker(
-                      textEditingController: textController,
-                      onEmojiSelected: (categoery, emoji) {
-                        setState(() {
-                          hasData = true;
-                        });
-                      },
-                      config: const Config(
-                        columns: 7,
-                        emojiSizeMax: 24,
-                        verticalSpacing: 0,
-                        horizontalSpacing: 0,
-                        gridPadding: EdgeInsets.zero,
-                        initCategory: Category.RECENT,
-                        bgColor: Colors.transparent,
-                        indicatorColor: Color(0xff705cff),
-                        iconColor: Colors.grey,
-                        iconColorSelected: Color(0xff705cff),
-                        backspaceColor: Color(0xff705cff),
-                        skinToneDialogBgColor: Colors.white,
-                        skinToneIndicatorColor: Colors.grey,
-                        enableSkinTones: true,
-                        recentsLimit: 28,
-                        replaceEmojiOnLimitExceed: false,
-                        recentTabBehavior: RecentTabBehavior.RECENT,
-                        noRecents: Text(
-                          'No Recents',
-                          style: TextStyle(fontSize: 20, color: Colors.black26),
-                          textAlign: TextAlign.center,
-                        ),
-                        loadingIndicator: SizedBox.shrink(),
-                        tabIndicatorAnimDuration: kTabScrollDuration,
-                        categoryIcons: CategoryIcons(),
-                        buttonMode: ButtonMode.MATERIAL,
-                        checkPlatformCompatibility: true,
-                      ),
-                    ),
-                  )
-                : Container(),
+            InkWell(
+              onTap: _toggleEmoji,
+              child: Iconify(
+                showEmoji ? Carbon.string_text : Ic.outline_emoji_emotions,
+                size: 22,
+                color: widget.theme.iconColor,
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmojiPicker() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.35,
+      child: EmojiPicker(
+        textEditingController: textController,
+        onEmojiSelected: (_, __) => setState(() {}),
+        config: Config(
+          height: 256,
+          checkPlatformCompatibility: true,
+          emojiViewConfig: EmojiViewConfig(
+            // Issue: https://github.com/flutter/flutter/issues/28894
+            emojiSizeMax:
+                28 * (defaultTargetPlatform == TargetPlatform.iOS ? 1.20 : 1.0),
+          ),
+          viewOrderConfig: const ViewOrderConfig(
+            top: EmojiPickerItem.categoryBar,
+            middle: EmojiPickerItem.emojiView,
+            bottom: EmojiPickerItem.searchBar,
+          ),
+          skinToneConfig: const SkinToneConfig(),
+          categoryViewConfig: const CategoryViewConfig(),
+          bottomActionBarConfig: const BottomActionBarConfig(),
+          searchViewConfig: const SearchViewConfig(),
         ),
       ),
     );

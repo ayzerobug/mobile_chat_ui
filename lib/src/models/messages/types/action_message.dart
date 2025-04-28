@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../../../utils/author_details_location.dart';
-import '../../../../utils/chat_theme.dart';
+import '../../../../utils/themes/chat_theme.dart';
 import '../../user.dart';
 import 'message.dart';
 
 class ActionMessage extends Message {
   final String text;
-  ActionMessage(
-      {required super.author, required super.time, required this.text});
+  ActionMessage({
+    required super.author,
+    required super.id,
+    required super.time,
+    required this.text,
+    super.theme,
+  });
 
   @override
   Widget builder(
@@ -17,13 +22,16 @@ class ActionMessage extends Message {
       bool showMessageStatus,
       bool showUsername,
       User loggedInUser,
-      ChatTheme theme,
+      ChatTheme chatTheme,
       AuthorDetailsLocation authorDetailsLocation) {
     return Padding(
-      padding: theme.actionMessageMargin,
+      padding: theme?.margin ??
+          chatTheme.actionMessageTheme?.margin ??
+          EdgeInsets.zero,
       child: Text(
         text,
-        style: theme.actionMessageTextStyle,
+        style: theme?.contentTextStyle ??
+            chatTheme.actionMessageTheme?.contentTextStyle,
         textAlign: TextAlign.center,
       ),
     );

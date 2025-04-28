@@ -4,7 +4,7 @@ import 'package:iconify_flutter/icons/ion.dart';
 
 import '../../../widgets/containers/message_container.dart';
 import '../../../../utils/author_details_location.dart';
-import '../../../../utils/chat_theme.dart';
+import '../../../../utils/themes/chat_theme.dart';
 import '../../user.dart';
 import 'message.dart';
 
@@ -12,13 +12,16 @@ class DocumentMessage extends Message {
   final String documentSize;
   final String documentFormat;
   final String documentName;
-  DocumentMessage(
-      {required super.author,
-      required super.time,
-      super.stage,
-      required this.documentSize,
-      required this.documentFormat,
-      required this.documentName});
+  DocumentMessage({
+    required super.author,
+    required super.time,
+    super.stage,
+    required super.id,
+    required this.documentSize,
+    required this.documentFormat,
+    required this.documentName,
+    super.theme,
+  });
 
   @override
   Widget builder(
@@ -87,7 +90,7 @@ class DocumentMessage extends Message {
     return MessageContainer(
       parentContext: ctx,
       message: this,
-      theme: theme,
+      chatTheme: theme,
       showUserAvatar: showUserAvatar,
       showMessageStatus: showMessageStatus,
       showUsername: showUsername,
