@@ -1,3 +1,3 @@
-## 1.0.0
+## 2.0.0
 
 * A total refractor of the package.
